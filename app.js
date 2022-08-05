@@ -2,7 +2,7 @@
 const router = require('./routes')
 const express = require('express')
 const app = express()
-
+const bodyParser = require('body-parser');
 // Acuérdense de agregar su router o cualquier middleware que necesiten acá.
 
 app.use(express.json())

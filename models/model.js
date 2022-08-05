@@ -111,7 +111,18 @@ module.exports = {
     // En caso de contrario arrojar el Error ('Contenido no disponible, contrata ahora HenryFlix Premium!')
     // En caso exitoso, añadir el nombre (solo el nombre) de la serie a la propiedad <watched> del usuario.
     // Devuelve un mensaje con el formato: 'Reproduciendo <nombre de serie>'
+    let user = users.find(u => u.email === email);
+    if(!user) throw new Error('Usuario inexistente');
 
+    let matchedSerie = series.find(s=> s.name === serie);
+    if(!matchedSerie) throw new Error('Serie inexistente');
+
+    if(user.plan === 'regular' && matchedSerie.category === 'premium') {
+      throw new Error('Contenido no disponible, contrata ahora HenryFlix Premium!')
+    } else {
+      user.watched.push(serie);
+      return `Reproduciendo ${serie}`
+    }
   },
 
   watchAgain: function (email) {
