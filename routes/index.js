@@ -59,7 +59,25 @@ router.get('/series/:category', (req, res) => {
     if(category !== 'regular' && category !== 'premium') res.status(404).json({ error: `La categoría ${category} no existe` });
 
     res.status(200).json(models.listSeries(category));
-})
+});
+
+router.get('/play/:serie', (req, res) => {
+
+    const {serie} = req.params;
+    const email = req.query.user;
+
+    let users = models.listUsers();
+    let user = users.find(u => u.email === email);
+    let allSeries = models.listSeries();
+    let matchedSerie = allSeries.find(s => s.name === serie);
+
+    if(!user) res.status(404).json({ error: 'Usuario inexistente' });
+    if(!matchedSerie) res.status(404).json({ error: 'Serie inexistente' });
+    if(matchedSerie.category !== user.plan) res.status(404).json({ error: 'Contenido no disponible, contrata ahora HenryFlix Premium!' });
+
+    res.status(200).json({ msg: models.play(serie, email)});
+
+});
 
 
 
