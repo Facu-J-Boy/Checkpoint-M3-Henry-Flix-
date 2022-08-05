@@ -53,6 +53,14 @@ router.post('/series', (req, res) => {
     res.status(201).json({ msg: `La serie ${name} fue agregada correctamente`});
 });
 
+router.get('/series/:category', (req, res) => {
+    
+    const {category} = req.params;
+    if(category !== 'regular' && category !== 'premium') res.status(404).json({ error: `La categoría ${category} no existe` });
+
+    res.status(200).json(models.listSeries(category));
+})
+
 
 
 // Hint:  investigá las propiedades del objeto Error en JS para acceder al mensaje en el mismo.
