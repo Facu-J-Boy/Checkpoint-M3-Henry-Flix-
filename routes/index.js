@@ -34,8 +34,25 @@ router.patch('/users/plan', (req, res) => {
 
     models.switchPlan(user.email);
     res.status(200).json({ msg: `${user.name}, ahora tienes el plan ${user.plan}`});
-    
-})
+});
+
+router.get('/series', (req, res) => {
+    res.status(200).json(models.listSeries());
+});
+
+router.post('/series', (req, res) => {
+
+    const {name, seasons, category, year} = req.body;
+    let allSeries = models.listSeries();
+    let matchedSerie = allSeries.find(s => s.name === name);
+
+    if(matchedSerie) res.status(400).json({ error: `La serie ${name} ya existe`});
+    if(category !== 'regular' && category !== 'premium') res.status(400).json({ error: `La categoría ${category} no existe`});
+
+    models.addSerie(name, seasons, category, year);
+    res.status(201).json({ msg: `La serie ${name} fue agregada correctamente`});
+});
+
 
 
 // Hint:  investigá las propiedades del objeto Error en JS para acceder al mensaje en el mismo.
