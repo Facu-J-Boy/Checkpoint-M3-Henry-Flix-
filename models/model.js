@@ -143,7 +143,25 @@ module.exports = {
     // Si la serie no existe, arroja el Error ('Serie inexistente') y no actualiza el puntaje.
     // Debe recibir un puntaje entre 1 y 5 inclusive. En caso contrario arroja el Error ('Puntaje inválido') y no actualiza el puntaje.
     // Si el usuario no reprodujo la serie, arroja el Error ('Debes reproducir el contenido para poder puntuarlo') y no actualiza el puntaje. >> Hint: pueden usar la función anterior
+    let user = users.find(u => u.email === email);
+    let matchedSerie = series.find(s=> s.name === serie);
 
+    if(!user) throw new Error('Usuario inexistente');
+    if(!matchedSerie) throw new Error('Serie inexistente');
+    if(score < 1 || score > 5) throw new Error('Puntaje inválido');
+    if(!user.watched.includes(serie)) throw new Error('Debes reproducir el contenido para poder puntuarlo');
+
+    let review = {
+      email,
+      score
+    }
+    matchedSerie.reviews.push(review);
+
+    let newRating = 0;
+    matchedSerie.reviews.forEach(r => newRating += r.score);
+    matchedSerie.rating = Math.round(newRating / matchedSerie.reviews.length);
+
+    return `Le has dado ${score} puntos a la serie ${serie}`;
   }
 
 }
