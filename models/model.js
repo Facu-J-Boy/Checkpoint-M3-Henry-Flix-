@@ -68,7 +68,7 @@ module.exports = {
     }
   },
 
-  addSerie: function (name, seasons, category, year) {
+  addSerie: function (name, seasons, category, year, rating=0, reviews=[]) {
     // Agrega una nueva serie al catálogo.
     // Si la serie ya existe, no la agrega y arroja un Error ('La serie <nombre_de_la_serie> ya existe')
     // Si la categoría no existe, arroja un Error ('La categoría <nombre_de_la_categoría> no existe') y no agrega la serie.
@@ -76,14 +76,31 @@ module.exports = {
     // Debe guardar la propiedad <category> de la serie (regular o premium)
     // Debe guardar la propiedade <rating> inicializada 0
     // Debe guardar la propiedade <reviews> que incialmente es un array vacío.
+    let serie = series.find(s=> s.name === name);
+    if(serie) throw new Error(`La serie ${serie.name} ya existe`);
+    if(!categories.includes(category)) throw new Error(`La categoría ${category} no existe`);
 
+    let newSerie = {
+      name, 
+      seasons,
+      category,
+      year,
+      rating,
+      reviews
+    }
+
+    series.push(newSerie);
+    return `La serie ${newSerie.name} fue agregada correctamente`;
   },
 
   listSeries: function (category) {
     // Devuelve un arreglo con todas las series.
     // Si recibe una categoría como parámetro, debe filtrar sólo las series pertenecientes a la misma (regular o premium).
     // Si la categoría no existe, arroja un Error ('La categoría <nombre_de_la_categoría> no existe') y no agrega la serie.
+    if(category && !categories.includes(category)) throw new Error(`La categoría ${category} no existe`);
+    if(category && categories.includes(category)) return series.filter(s=> s.category === category);
 
+    return series;
   },
 
   play: function (serie, email) {
