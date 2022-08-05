@@ -128,7 +128,10 @@ module.exports = {
   watchAgain: function (email) {
     // Devuelve sólo las series ya vistas por el usuario
     // Si el usuario no existe, arroja el Error ('Usuario inexistente')
+    let user = users.find(u => u.email === email);
+    if(!user) throw new Error('Usuario inexistente');
 
+    return user.watched;
   },
 
   rateSerie: function (serie, email, score) {
