@@ -88,6 +88,23 @@ router.get('/watchAgain', (req, res) => {
     if(!user) res.status(404).json({ error: 'Usuario inexistente' });
 
     res.status(200).json(user.watched);
+});
+
+router.post('/rating/:serie', (req, res) => {
+    const {email, score} = req.body;
+    const {serie} = req.params;
+
+    let users = models.listUsers();
+    let user = users.find(u => u.email === email);
+    let allSeries = models.listSeries();
+    let matchedSerie = allSeries.find(s => s.name === serie);
+
+    if(!user) res.status(404).json({ error: 'Usuario inexistente' });
+    if(!matchedSerie) res.status(404).json({ error: 'Serie inexistente' });
+    if(score < 1 || score > 5) res.status(404).json({ error: 'Puntaje inválido' });
+    if(!user.watched.includes(serie)) res.status(404).json({ error: 'Debes reproducir el contenido para poder puntuarlo'});
+
+    res.status(200).json({msg: models.rateSerie(serie, email, score)});
 })
 
 
