@@ -20,7 +20,7 @@ module.exports = {
 
   // ==== COMPLETAR LAS SIGUIENTES FUNCIONES (vean los test de `model.js`) =====
 
-  addUser: function (email, name) {
+  addUser: function (email, name, plan='regular', watched=[]) {
     // Agrega un nuevo usuario, verificando que no exista anteriormente en base a su email.
     // En caso de existir, no se agrega y debe arrojar el Error ('El usuario ya existe') >> ver JS throw Error
     // Debe tener una propiedad <plan> que inicialmente debe ser 'regular'.
@@ -28,13 +28,27 @@ module.exports = {
     // El usuario debe guardarse como un objeto con el siguiente formato:
     // {  email: email, name: name,  plan: 'regular' , watched: []}
     // En caso exitoso debe retornar el string 'Usuario <email_del_usuario> creado correctamente'.
+    let user = users.find(u => u.email === email);
+    if(user) throw new Error('El usuario ya existe');
 
+    let newUser = { 
+      email, 
+      name,  
+      plan,
+      watched
+    }
+    users.push(newUser);
+    return `Usuario ${newUser.email} creado correctamente`;
   },
 
   listUsers: function (plan) {
     // Si no recibe parámetro, devuelve un arreglo con todos los usuarios.
     // En caso de recibir el parámetro <plan>, devuelve sólo los usuarios correspondientes a dicho plan ('regular' o 'premium').
-
+    if(plan){
+      let usersPlan = users.filter(u => u.plan === plan);
+      return usersPlan;
+    }
+    return users;
   },
 
   switchPlan: function (email) {
