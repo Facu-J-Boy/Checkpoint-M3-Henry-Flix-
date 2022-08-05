@@ -24,6 +24,19 @@ router.post('/users', (req, res) => {
     res.status(201).json({ msg: `Usuario ${email} creado correctamente`});
 });
 
+router.patch('/users/plan', (req, res) => {
+
+    const email = req.query.user;
+    let users = models.listUsers();
+    let user = users.find(u => u.email === email);
+
+    if(!user) res.status(404).json({ error: 'Usuario inexistente' });
+
+    models.switchPlan(user.email);
+    res.status(200).json({ msg: `${user.name}, ahora tienes el plan ${user.plan}`});
+    
+})
+
 
 // Hint:  investigá las propiedades del objeto Error en JS para acceder al mensaje en el mismo.
 
