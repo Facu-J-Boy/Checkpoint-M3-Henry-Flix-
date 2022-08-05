@@ -56,7 +56,16 @@ module.exports = {
   // Retorna el mensaje '<Nombre_de_usuario>, ahora tienes el plan <nuevo_plan>'
   // Ej: 'Martu, ahora tienes el plan premium'
   // Si el usuario no existe, arroja el Error ('Usuario inexistente')
+    let user = users.find(u => u.email === email);
+    if(!user) throw new Error('Usuario inexistente');
 
+    if(user.plan === 'regular'){
+      user.plan = 'premium';
+      return `${user.name}, ahora tienes el plan ${user.plan}`;
+    } else {
+      user.plan = 'regular';
+      return `${user.name}, ahora tienes el plan ${user.plan}`;
+    }
   },
 
   addSerie: function (name, seasons, category, year) {
